@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>analyticsForm</title>
+</head>
+<body>
+    <h1>URL Analytics</h1>
+    <div class="idForm">
+        <form  method="POST" action="/URL/analytics">
+            <label>enter url shortId</label>
+            <input type="text" name="shortId" placeholder="eg. abcd1234">
+            <button type="submit">get analytics</button>
+        </form>
+    </div>
+    <% if (locals.analytics) { %>
+     <div class="analytics">
+        <h3>ShortID: <%= shortId %></h3>
+        <h3>Clicks: <%= clicks %></h3>
+        <div class="analyticsTable">
+            <table>
+            <thead>
+                <tr>
+                    <th>s.no</th>
+                    <th>TimeStamps</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% analytics.forEach((ts, index) => { %>
+                    <tr>
+                    <td> <%= index+1 %> </td>
+                    <td> <%= new Date(ts.timestamp).toLocaleString() %> </td>
+                    </tr>
+                <%  }); %>
+            </tbody>
+        </table>
+        </div>
+     </div>
+    <% } %>
+</body>
+</html>
