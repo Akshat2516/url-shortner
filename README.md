@@ -274,47 +274,14 @@ http://localhost:8000/login
 
 ---
 
-## 📸 Screenshots
-
-Add screenshots here after deployment.
-
-### Home Page
-
-```text
-screenshots/home.png
-```
-
-### Login Page
-
-```text
-screenshots/login.png
-```
-
-### Analytics Page
-
-```text
-screenshots/analytics.png
-```
-
----
-
 ## 📈 Future Improvements
 
-- JWT-based Authentication
-- Password Hashing using bcrypt
-- User Logout Functionality
-- Custom Short Aliases
-- QR Code Generation
-- URL Expiration Support
-- Search and Filter URLs
-- Pagination
-- Admin Dashboard
-- Graph-Based Analytics
-- Redis-Based Session Storage
-- Rate Limiting
-- Docker Deployment
-- Cloud Database Integration
-- CI/CD Pipeline
+- User authentication
+- Custom short aliases
+- URL expiration support
+- QR code generation
+- Dashboard with charts and analytics
+- Rate limiting and security enhancements
 
 ---
 
