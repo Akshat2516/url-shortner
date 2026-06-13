@@ -1,22 +1,43 @@
-# 🔗 QuickLink - URL Shortener & Analytics
+# 🔗 QuickLink - URL Shortener, Analytics & Authentication
 
 ![NodeJS](https://img.shields.io/badge/Node.js-LTS-green?style=for-the-badge&logo=node.js)
 ![ExpressJS](https://img.shields.io/badge/Express.js-Backend-black?style=for-the-badge&logo=express)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Database-green?style=for-the-badge&logo=mongodb)
+![Mongoose](https://img.shields.io/badge/Mongoose-ODM-red?style=for-the-badge)
 ![EJS](https://img.shields.io/badge/EJS-Templates-orange?style=for-the-badge)
 
-A URL shortening service built using **Node.js**, **Express.js**, **MongoDB**, and **Mongoose**. The application generates unique short URLs, redirects users to the original destination, and tracks click analytics with timestamp-based visit history.
+A full-stack URL shortening platform built with **Node.js**, **Express.js**, **MongoDB**, **Mongoose**, and **EJS**. Users can create accounts, log in, generate shortened URLs, track click analytics, and manage their own links through a server-rendered web interface.
 
 ---
 
 ## 🚀 Features
 
+### URL Shortening
 - Generate unique short URLs using **NanoID**
-- Redirect users from shortened links to original URLs
-- Track click analytics for every shortened URL
+- Redirect users to the original destination URL
+- Fast and lightweight URL generation
+
+### Analytics
+- Track total clicks for every shortened URL
 - Store timestamp-based visit history
-- Server-side rendered pages using **EJS**
-- Modular backend architecture with Express routers and controllers
+- View URL analytics through a dedicated analytics page
+
+### Authentication
+- User Signup and Login
+- Cookie-based **Stateful Authentication**
+- Session management using server-side session storage
+- Protected routes accessible only to authenticated users
+
+### User-Specific URLs
+- Each user can create and manage their own URLs
+- URLs are associated with the user who created them
+- Dashboard displays only the logged-in user's URLs
+
+### Backend Architecture
+- MVC-inspired project structure
+- Modular routing and controllers
+- MongoDB persistence using Mongoose ODM
+- Server-side rendering with EJS
 
 ---
 
@@ -30,8 +51,12 @@ A URL shortening service built using **Node.js**, **Express.js**, **MongoDB**, a
 - MongoDB
 - Mongoose
 
-### Templating Engine
+### Frontend / Templates
 - EJS
+
+### Authentication
+- Cookies
+- Stateful Session Management
 
 ### Utilities
 - NanoID
@@ -43,18 +68,34 @@ A URL shortening service built using **Node.js**, **Express.js**, **MongoDB**, a
 ```text
 .
 ├── controllers/
-│   └── url.js
+│   ├── url.js
+│   └── user.js
+│
+├── middlewares/
+│   └── auth.js
+│
 ├── models/
-│   └── url.js
+│   ├── url.js
+│   └── user.js
+│
 ├── routes/
 │   ├── url.js
+│   ├── user.js
 │   └── staticRouter.js
+│
+├── services/
+│   └── auth.js
+│
 ├── views/
 │   ├── home.ejs
+│   ├── login.ejs
+│   ├── signup.ejs
 │   └── analyticsForm.ejs
+│
 ├── connection.js
 ├── index.js
 ├── package.json
+├── package-lock.json
 └── README.md
 ```
 
@@ -62,23 +103,72 @@ A URL shortening service built using **Node.js**, **Express.js**, **MongoDB**, a
 
 ## 🗺️ Routes
 
+### Authentication Routes
+
 | Method | Route | Description |
 |----------|----------|----------|
-| GET | `/` | Render homepage |
-| POST | `/url` | Create short URL |
+| GET | `/signup` | Render signup page |
+| POST | `/user/signup` | Register a new user |
+| GET | `/login` | Render login page |
+| POST | `/user/login` | Authenticate user |
+
+---
+
+### URL Routes
+
+| Method | Route | Description |
+|----------|----------|----------|
+| GET | `/` | Home page (Protected) |
+| POST | `/url` | Generate short URL |
 | GET | `/url/:id` | Redirect to original URL |
-| GET | `/url/analytics` | Analytics lookup page |
-| POST | `/url/analytics` | Display analytics data |
+| GET | `/url/analytics` | Render analytics page |
+| POST | `/url/analytics` | Fetch URL analytics |
+
+---
+
+## 🔐 Authentication Flow
+
+1. User signs up using email and password.
+2. User logs in.
+3. A unique session ID is generated.
+4. Session ID is stored in a cookie.
+5. Session data is maintained on the server.
+6. Protected routes verify the session before granting access.
 
 ---
 
 ## 📊 Database Schema
 
+### User Schema
+
+```javascript
+{
+  name: {
+    type: String,
+    required: true
+  },
+
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
+
+  password: {
+    type: String,
+    required: true
+  }
+}
+```
+
+### URL Schema
+
 ```javascript
 {
   shortID: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
 
   redirectURL: {
@@ -92,7 +182,13 @@ A URL shortening service built using **Node.js**, **Express.js**, **MongoDB**, a
         type: Number
       }
     }
-  ]
+  ],
+
+  createdBy: {
+    type: ObjectId,
+    ref: "user",
+    required: true
+  }
 }
 ```
 
@@ -103,7 +199,7 @@ A URL shortening service built using **Node.js**, **Express.js**, **MongoDB**, a
 ### Prerequisites
 
 - Node.js (v18 or later)
-- MongoDB running locally
+- MongoDB
 
 ### Clone Repository
 
@@ -118,21 +214,23 @@ cd url-shortner
 npm install
 ```
 
-### Start MongoDB
+### Configure MongoDB
 
-Make sure MongoDB is running locally on:
+Make sure MongoDB is running locally:
 
 ```text
 mongodb://127.0.0.1:27017
 ```
 
-### Run Application
+Update the connection string in your project if needed.
+
+### Run the Application
 
 ```bash
 node index.js
 ```
 
-or with Nodemon:
+or
 
 ```bash
 nodemon index.js
@@ -142,30 +240,97 @@ nodemon index.js
 
 ## 🌐 Usage
 
+### Create an Account
+
 1. Open:
 
 ```text
-http://localhost:8000
+http://localhost:8000/signup
 ```
 
-2. Enter a long URL.
+2. Register with your details.
 
-3. Generate a shortened URL.
+### Login
 
-4. Use the short link for redirection.
+1. Visit:
 
-5. Check analytics by entering the generated short ID on the analytics page.
+```text
+http://localhost:8000/login
+```
+
+2. Enter your credentials.
+
+### Create a Short URL
+
+1. Paste a long URL.
+2. Click **Generate**.
+3. Receive a unique shortened URL.
+
+### View Analytics
+
+1. Navigate to the analytics page.
+2. Enter a short ID.
+3. View total clicks and visit history.
+
+---
+
+## 📸 Screenshots
+
+Add screenshots here after deployment.
+
+### Home Page
+
+```text
+screenshots/home.png
+```
+
+### Login Page
+
+```text
+screenshots/login.png
+```
+
+### Analytics Page
+
+```text
+screenshots/analytics.png
+```
 
 ---
 
 ## 📈 Future Improvements
 
-- User authentication
-- Custom short aliases
-- URL expiration support
-- QR code generation
-- Dashboard with charts and analytics
-- Rate limiting and security enhancements
+- JWT-based Authentication
+- Password Hashing using bcrypt
+- User Logout Functionality
+- Custom Short Aliases
+- QR Code Generation
+- URL Expiration Support
+- Search and Filter URLs
+- Pagination
+- Admin Dashboard
+- Graph-Based Analytics
+- Redis-Based Session Storage
+- Rate Limiting
+- Docker Deployment
+- Cloud Database Integration
+- CI/CD Pipeline
+
+---
+
+## 🎯 Learning Outcomes
+
+This project helped me gain hands-on experience with:
+
+- RESTful API Design
+- Express.js Routing
+- MongoDB and Mongoose
+- Stateful Authentication
+- Cookies and Session Management
+- Server-Side Rendering with EJS
+- MVC-inspired Backend Architecture
+- Database Relationships and References
+- URL Analytics Tracking
 
 ---
 
@@ -173,9 +338,14 @@ http://localhost:8000
 
 **Akshat Dhongade**
 
-- GitHub: https://github.com/Akshat2516
-- LinkedIn: https://linkedin.com/in/akshat-dhongade
+GitHub: https://github.com/Akshat2516
+
+LinkedIn: https://linkedin.com/in/akshat-dhongade
 
 ---
 
-⭐ If you found this project useful, consider giving it a star.
+## ⭐ Support
+
+If you found this project useful, consider giving it a star on GitHub.
+
+Contributions, suggestions, and feedback are always welcome.
