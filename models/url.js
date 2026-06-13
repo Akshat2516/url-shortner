@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const user = require('./user');
 
 const urlSchema = new mongoose.Schema({
     shortID: {
@@ -9,11 +10,15 @@ const urlSchema = new mongoose.Schema({
     redirectURL: {
         type: String,
         required: true,
-        unique: true
     },
     visitHistory: {
         type: [{timestamp : {type: Number}}]
-    }
+    },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user',
+        required: true,
+    },
 }, {timestamps: true});
 
 const URL = mongoose.model('url', urlSchema);
