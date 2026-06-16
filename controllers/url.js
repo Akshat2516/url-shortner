@@ -7,6 +7,7 @@ const handleCreateShortUrl = async(req, res) => {
         return res.status(400).json({error: "url is required"});
     }
     const shortId = nanoid(7);
+    console.log(req.user);
     const url = await URL.create({
         shortID: shortId,
         redirectURL: body.url,

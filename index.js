@@ -31,4 +31,4 @@ app.use("/", checkAuth, staticRouter);
 
 app.listen(port, () => {
     console.log(`server started at PORT: ${port}!!!`);
-});
+}); 

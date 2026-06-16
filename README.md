@@ -24,7 +24,7 @@ A full-stack URL shortening platform built with **Node.js**, **Express.js**, **M
 
 ### Authentication
 - User Signup and Login
-- Cookie-based **Stateful Authentication**
+- JWT-based **Stateless Authentication**
 - Session management using server-side session storage
 - Protected routes accessible only to authenticated users
 
@@ -276,8 +276,6 @@ http://localhost:8000/login
 
 ## 📈 Future Improvements
 
-- User authentication
-- Custom short aliases
 - URL expiration support
 - QR code generation
 - Dashboard with charts and analytics
@@ -292,7 +290,8 @@ This project helped me gain hands-on experience with:
 - RESTful API Design
 - Express.js Routing
 - MongoDB and Mongoose
-- Stateful Authentication
+- JavaScript Web Token (JWT)
+- Stateful and Stateless Authentication
 - Cookies and Session Management
 - Server-Side Rendering with EJS
 - MVC-inspired Backend Architecture
